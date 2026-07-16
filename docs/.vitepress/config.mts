@@ -328,6 +328,7 @@ export default defineConfig({
                             items: [
                                 { text: '概述', link: '/nav/fundamentals/protocol/http/http-protocol/' },
                                 { text: 'Basic Auth', link: '/nav/fundamentals/protocol/http/http-basic-auth/' },
+                                { text: 'RESTful API', link: '/nav/fundamentals/protocol/restful-api/' },
                             ],
                         },
                         { text: 'SSH', link: '/nav/fundamentals/protocol/ssh/ssh-protocol/' },
