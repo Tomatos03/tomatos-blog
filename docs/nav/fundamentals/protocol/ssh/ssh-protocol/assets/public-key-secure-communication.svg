@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="630" viewBox="0 0 800 630">
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <polygon points="0 0, 6 2, 0 4" fill="#999"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <polygon points="0 0, 6 2, 0 4" fill="#3498db"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <polygon points="0 0, 6 2, 0 4" fill="#2ecc71"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="6" markerHeight="4" refX="5" refY="2" orient="auto">
+      <polygon points="0 0, 6 2, 0 4" fill="#e67e22"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="630" fill="#fafafa"/>
+
+  <!-- Title -->
+  <text x="400" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#333">公钥与私钥安全通信流程</text>
+
+  <!-- ======= Participants ======= -->
+  <!-- Sender -->
+  <rect x="80" y="55" width="160" height="44" rx="8" fill="#fff" stroke="#3498db" stroke-width="2" filter="url(#shadow)"/>
+  <text x="160" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c3e50">发送方</text>
+
+  <!-- Receiver -->
+  <rect x="560" y="55" width="160" height="44" rx="8" fill="#fff" stroke="#2ecc71" stroke-width="2" filter="url(#shadow)"/>
+  <text x="640" y="82" text-anchor="middle" font-size="14" font-weight="bold" fill="#2c3e50">接收方</text>
+
+  <!-- Lifelines -->
+  <line x1="160" y1="99" x2="160" y2="590" stroke="#ddd" stroke-width="1.5" stroke-dasharray="6,4"/>
+  <line x1="640" y1="99" x2="640" y2="590" stroke="#ddd" stroke-width="1.5" stroke-dasharray="6,4"/>
+
+  <!-- ======= ① 密钥生成 ======= -->
+
+  <!-- Sender generates its own key pair -->
+  <path d="M 160 125 L 125 125 L 125 150 L 160 150" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="120" y="142" text-anchor="end" font-size="11" fill="#555" font-weight="bold">生成密钥对</text>
+  <text x="120" y="156" text-anchor="end" font-size="10" fill="#999">(私钥A + 公钥A)</text>
+
+  <!-- Receiver generates its own key pair -->
+  <path d="M 640 125 L 675 125 L 675 150 L 640 150" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="680" y="142" text-anchor="start" font-size="11" fill="#555" font-weight="bold">生成密钥对</text>
+  <text x="680" y="156" text-anchor="start" font-size="10" fill="#999">(私钥B + 公钥B)</text>
+
+  <!-- ======= ② 交换公钥 ======= -->
+
+  <!-- Sender sends public key A to Receiver -->
+  <path d="M 160 195 L 639 195" fill="none" stroke="#3498db" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <text x="400" y="188" text-anchor="middle" font-size="11" fill="#2980b9" font-weight="bold">发送公钥A</text>
+
+  <!-- Receiver sends public key B to Sender -->
+  <path d="M 640 235 L 161 235" fill="none" stroke="#2ecc71" stroke-width="2" marker-end="url(#arrow-green)"/>
+  <text x="400" y="228" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">发送公钥B</text>
+
+  <!-- ======= ③ 发送方：签名 + 加密 ======= -->
+
+  <!-- Sign with sender's private key -->
+  <path d="M 160 285 L 125 285 L 125 310 L 160 310" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="120" y="302" text-anchor="end" font-size="11" fill="#555" font-weight="bold">用私钥A签名</text>
+
+  <!-- Encrypt with receiver's public key -->
+  <path d="M 160 345 L 125 345 L 125 370 L 160 370" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="120" y="362" text-anchor="end" font-size="11" fill="#555" font-weight="bold">用公钥B加密</text>
+  <text x="120" y="376" text-anchor="end" font-size="10" fill="#999">(消息 + 签名)</text>
+
+  <!-- ======= ④ 传输密文 ======= -->
+
+  <path d="M 160 415 L 639 415" fill="none" stroke="#e67e22" stroke-width="2" marker-end="url(#arrow-orange)"/>
+  <text x="400" y="408" text-anchor="middle" font-size="11" fill="#e67e22">发送密文</text>
+
+  <!-- ======= ⑤ 接收方：解密 + 验签 ======= -->
+
+  <!-- Decrypt with receiver's private key -->
+  <path d="M 640 465 L 675 465 L 675 490 L 640 490" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="680" y="482" text-anchor="start" font-size="11" fill="#555" font-weight="bold">用私钥B解密</text>
+
+  <!-- Verify signature with sender's public key -->
+  <path d="M 640 525 L 675 525 L 675 550 L 640 550" fill="none" stroke="#999" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="680" y="542" text-anchor="start" font-size="11" fill="#555" font-weight="bold">用公钥A验签</text>
+
+  <!-- ======= 完成 ======= -->
+
+  <!-- Success -->
+  <circle cx="640" cy="577" r="12" fill="#d5f5e3"/>
+  <text x="640" y="581" text-anchor="middle" font-size="11" fill="#27ae60">✓</text>
+  <text x="658" y="581" font-size="11" fill="#27ae60" font-weight="bold">消息完整，身份可信</text>
+
+  <!-- Security warning -->
+  <rect x="140" y="600" width="520" height="22" rx="6" fill="#fdedec" stroke="#e74c3c" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="400" y="615" text-anchor="middle" font-size="10" fill="#c0392b">⚠️ 消息被窃取无法解密（无私钥B）；消息被篡改签名验证失败，接收方拒绝接受</text>
+</svg>
