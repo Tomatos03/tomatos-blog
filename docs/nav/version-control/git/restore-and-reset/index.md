@@ -42,6 +42,10 @@ git rm --cached <file-name>
 | mixed  | `git reset --mixed <hash>`<br>`git reset <hash>`      | 保留       | 清除       | 回退         |
 | hard   | `git reset --hard <hash>`                             | 清除       | 清除       | 回退         |
 
+下图展示了三种模式对工作区、暂存区、提交历史的影响（假设 HEAD 原本在提交 C，`git reset` 后回退到 A）：
+
+<img src="assets/git-reset.svg" alt="git reset 三种模式对比" style="width: 100%; max-width: 960px; height: auto;">
+
 一些便捷命令: 
 
 ```bash
