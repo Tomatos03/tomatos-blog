@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 840" width="1200" height="840">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .panel { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .panel-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:15px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .obj-white { fill:#FAFAFA; stroke:#9E9E9E; stroke-width:2; }
+      .obj-gray { fill:#E0E0E0; stroke:#757575; stroke-width:2; }
+      .obj-black { fill:#455A64; stroke:#263238; stroke-width:2; }
+      .obj-collect { fill:#FFEBEE; stroke:#d32f2f; stroke-width:2; }
+      .obj-name { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:16px; font-weight:bold; fill:#37474F; text-anchor:middle; }
+      .obj-name-w { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:16px; font-weight:bold; fill:#FFFFFF; text-anchor:middle; }
+      .obj-state { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#546e7a; text-anchor:middle; }
+      .obj-state-w { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#B0BEC5; text-anchor:middle; }
+      .edge { stroke:#546e7a; stroke-width:2; fill:none; marker-end:url(#arrowhead); }
+      .edge-new { stroke:#388e3c; stroke-width:2; fill:none; marker-end:url(#arrowhead-green); }
+      .edge-cut { stroke:#d32f2f; stroke-width:2; fill:none; stroke-dasharray:7,5; }
+      .edge-label { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#455a64; text-anchor:middle; }
+      .edge-label-green { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#2e7d32; text-anchor:middle; }
+      .edge-label-red { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#c62828; text-anchor:middle; }
+      .code-line { font-family:'Consolas','Courier New',monospace; font-size:12.5px; font-weight:bold; fill:#c62828; text-anchor:middle; }
+      .desc { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#374151; text-anchor:middle; }
+      .legend-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#374151; }
+      .timeline { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#607D8B; text-anchor:middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#388e3c"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="840" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">三色标记：并发标记的"漏标"</text>
+  <text x="600" y="66" class="sub">G→W 是 W 的唯一可达路径；B 已处理完（黑色）。应用线程修改引用后，W 被漏标误回收</text>
+
+  <!-- ============ 时刻 1 ============ -->
+  <rect x="40" y="100" width="540" height="320" rx="12" class="panel"/>
+  <text x="310" y="128" class="panel-title">时刻 1：GC 标记进行中</text>
+
+  <rect x="70" y="150" width="120" height="70" rx="10" class="obj-gray"/>
+  <text x="130" y="177" class="obj-name">G</text>
+  <text x="130" y="200" class="obj-state">灰色：处理中</text>
+
+  <rect x="240" y="150" width="120" height="70" rx="10" class="obj-black"/>
+  <text x="300" y="177" class="obj-name-w">B</text>
+  <text x="300" y="200" class="obj-state-w">黑色：已处理完</text>
+
+  <rect x="410" y="150" width="120" height="70" rx="10" class="obj-white"/>
+  <text x="470" y="177" class="obj-name">W</text>
+  <text x="470" y="200" class="obj-state">白色：尚未访问</text>
+
+  <path d="M 190 185 C 250 240, 350 240, 408 185" class="edge"/>
+  <text x="300" y="252" class="edge-label">引用 G→W</text>
+
+  <text x="310" y="280" class="desc">GC 从 GC Roots 出发：G 被访问（灰），正准备扫描 G 的引用；</text>
+  <text x="310" y="302" class="desc">B 没有任何引用需要扫描，已被处理为黑色；W 还未被访问（白）。</text>
+
+  <!-- ============ 时刻 2 ============ -->
+  <rect x="620" y="100" width="540" height="320" rx="12" class="panel"/>
+  <text x="890" y="128" class="panel-title">时刻 2：应用线程修改引用</text>
+
+  <rect x="650" y="150" width="120" height="70" rx="10" class="obj-gray"/>
+  <text x="710" y="177" class="obj-name">G</text>
+  <text x="710" y="200" class="obj-state">灰色：处理中</text>
+
+  <rect x="820" y="150" width="120" height="70" rx="10" class="obj-black"/>
+  <text x="880" y="177" class="obj-name-w">B</text>
+  <text x="880" y="200" class="obj-state-w">黑色：已处理完</text>
+
+  <rect x="990" y="150" width="120" height="70" rx="10" class="obj-white"/>
+  <text x="1050" y="177" class="obj-name">W</text>
+  <text x="1050" y="200" class="obj-state">白色：尚未访问</text>
+
+  <path d="M 770 200 C 810 245, 960 245, 988 208" class="edge-cut"/>
+  <line x1="940" y1="185" x2="988" y2="185" class="edge-new"/>
+  <text x="965" y="170" class="edge-label-green">新增B→W</text>
+  <text x="880" y="255" class="edge-label-red">G→W 被切断</text>
+
+  <text x="890" y="272" class="code-line">应用线程执行：B.w = W;   G.w = null;</text>
+  <text x="890" y="290" class="desc">W 唯一的可达路径（G→W）被切断，</text>
+  <text x="890" y="310" class="desc">新的引用来自黑色对象 B——GC 不会再扫描它。</text>
+
+  <!-- ============ 时刻 3 ============ -->
+  <rect x="40" y="450" width="540" height="320" rx="12" class="panel"/>
+  <text x="310" y="478" class="panel-title">时刻 3：GC 继续标记</text>
+
+  <rect x="70" y="500" width="120" height="70" rx="10" class="obj-black"/>
+  <text x="130" y="527" class="obj-name-w">G</text>
+  <text x="130" y="550" class="obj-state-w">黑色：扫描后无引用</text>
+
+  <rect x="240" y="500" width="120" height="70" rx="10" class="obj-black"/>
+  <text x="300" y="527" class="obj-name-w">B</text>
+  <text x="300" y="550" class="obj-state-w">黑色：不会再被扫描</text>
+
+  <rect x="410" y="500" width="120" height="70" rx="10" class="obj-white"/>
+  <text x="470" y="527" class="obj-name">W</text>
+  <text x="470" y="550" class="obj-state">白色：保持未访问</text>
+
+  <line x1="360" y1="535" x2="406" y2="535" stroke="#90a4ae" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowhead)"/>
+  <text x="383" y="525" class="edge-label" fill="#78909c"> B→W存在</text>
+  <text x="310" y="630" class="desc">GC 扫描 G 时，G 的引用已被清空，G 变黑；</text>
+  <text x="310" y="652" class="desc">B 是黑色（已处理完），它的引用不会再被扫描 → W 永远不会被染灰。</text>
+  <text x="310" y="688" class="edge-label-red">W 从此与标记过程失联</text>
+
+  <!-- ============ 时刻 4 ============ -->
+  <rect x="620" y="450" width="540" height="320" rx="12" class="panel"/>
+  <text x="890" y="478" class="panel-title">时刻 4：标记结束 —— 漏标！</text>
+
+  <rect x="650" y="500" width="120" height="70" rx="10" class="obj-black"/>
+  <text x="710" y="527" class="obj-name-w">B</text>
+  <text x="710" y="550" class="obj-state-w">黑色：存活</text>
+
+  <rect x="990" y="500" width="120" height="70" rx="10" class="obj-collect"/>
+  <text x="1050" y="527" class="obj-name" fill="#b71c1c">W</text>
+  <text x="1050" y="550" class="obj-state" fill="#c62828">被回收 ✗</text>
+
+  <line x1="770" y1="535" x2="988" y2="535" class="edge"/>
+  <text x="880" y="525" class="edge-label-red">悬垂引用！</text>
+
+  <text x="890" y="630" class="desc">标记结束：白色 W 被判定为垃圾并回收，</text>
+  <text x="890" y="652" class="desc" font-weight="bold" fill="#c62828">但 B.w 仍在使用 W → 误回收存活对象，程序出错！</text>
+
+  <!-- ===== 图例与时间线 ===== -->
+  <rect x="40" y="790" width="1120" height="36" rx="10" fill="#FFFFFF" stroke="#E0E4E8" stroke-width="1"/>
+  <rect x="60" y="800" width="16" height="16" rx="3" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+  <text x="82" y="812" class="legend-text">白色=未访问</text>
+  <rect x="190" y="800" width="16" height="16" rx="3" fill="#E0E0E0" stroke="#757575" stroke-width="1.5"/>
+  <text x="212" y="812" class="legend-text">灰色=处理中</text>
+  <rect x="320" y="800" width="16" height="16" rx="3" fill="#455A64" stroke="#263238" stroke-width="1.5"/>
+  <text x="342" y="812" class="legend-text">黑色=已处理完</text>
+  <rect x="450" y="800" width="16" height="16" rx="3" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="472" y="812" class="legend-text">红色=被回收</text>
+  <text x="760" y="812" class="timeline">时刻 1 → 2 → 3 → 4 依次发生；无三色标记+写屏障，W 将被误回收</text>
+</svg>
