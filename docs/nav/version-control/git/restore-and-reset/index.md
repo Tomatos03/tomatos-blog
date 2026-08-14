@@ -44,7 +44,7 @@ git rm --cached <file-name>
 
 下图展示了三种模式对工作区、暂存区、提交历史的影响（假设 HEAD 原本在提交 C，`git reset` 后回退到 A）：
 
-<img src="assets/git-reset.svg" alt="git reset 三种模式对比" style="width: 100%; max-width: 960px; height: auto;">
+![git reset 三种模式对比](assets/git-reset.svg)
 
 一些便捷命令: 
 
