@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .panel { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .panel-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:15px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .rule { fill:#FFFFFF; stroke:#1976d2; stroke-width:2; }
+      .rule-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13.5px; font-weight:bold; fill:#01579b; text-anchor:middle; dominant-baseline:middle; }
+      .root { fill:#E3F2FD; stroke:#1976d2; stroke-width:2; }
+      .root-disconnected { fill:#ECEFF1; stroke:#90a4ae; stroke-width:2; }
+      .obj-alive { fill:#E8F5E9; stroke:#388e3c; stroke-width:2; }
+      .obj-dead { fill:#FFEBEE; stroke:#d32f2f; stroke-width:2; }
+      .obj-name { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:14px; font-weight:bold; fill:#37474F; text-anchor:middle; }
+      .obj-count { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; font-weight:bold; text-anchor:middle; }
+      .count-ok { fill:#2e7d32; }
+      .count-bad { fill:#c62828; }
+      .obj-status { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11.5px; font-weight:bold; fill:#c62828; text-anchor:middle; }
+      .edge { stroke:#546e7a; stroke-width:1.8; fill:none; marker-end:url(#arrowhead); }
+      .edge-broken { stroke:#d32f2f; stroke-width:1.8; fill:none; stroke-dasharray:6,4; marker-end:url(#arrowhead-red); }
+      .edge-label { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; font-weight:bold; fill:#455a64; text-anchor:middle; }
+      .warn-card { fill:#FFFDE7; stroke:#f9a825; stroke-width:1.5; }
+      .warn-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#5d4037; text-anchor:start; }
+      .legend-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#374151; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+    <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#d32f2f"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="640" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">引用计数法：计数规则与循环引用问题</text>
+  <text x="600" y="66" class="sub">对象被引用 +1、引用失效 -1、计数为 0 即可回收；循环引用导致对象永远无法回收</text>
+
+  <!-- ===== 计数规则 ===== -->
+  <rect x="60" y="88" width="340" height="46" rx="10" class="rule"/>
+  <text x="230" y="111" class="rule-text">① 被引用时计数器 +1</text>
+  <rect x="430" y="88" width="340" height="46" rx="10" class="rule"/>
+  <text x="600" y="111" class="rule-text">② 引用失效时计数器 -1</text>
+  <rect x="800" y="88" width="340" height="46" rx="10" class="rule"/>
+  <text x="970" y="111" class="rule-text">③ 计数为 0 → 立即回收</text>
+  <line x1="400" y1="111" x2="428" y2="111" class="edge"/>
+  <line x1="770" y1="111" x2="798" y2="111" class="edge"/>
+
+  <!-- ===== 左栏：Root 持有引用时 ===== -->
+  <rect x="40" y="160" width="540" height="350" rx="12" class="panel"/>
+  <text x="310" y="188" class="panel-title">Root 持有引用时（计数正常）</text>
+
+  <rect x="60" y="240" width="130" height="70" rx="10" class="root"/>
+  <text x="125" y="265" class="obj-name" font-size="13px">GC Roots</text>
+  <text x="125" y="287" class="obj-count count-ok" font-size="10.5px">栈/局部变量</text>
+
+  <rect x="240" y="240" width="120" height="70" rx="10" class="obj-alive"/>
+  <text x="300" y="264" class="obj-name">对象 A</text>
+  <text x="300" y="287" class="obj-count count-ok">计数 2（Root+B）</text>
+
+  <rect x="390" y="240" width="120" height="70" rx="10" class="obj-alive"/>
+  <text x="450" y="264" class="obj-name">对象 B</text>
+  <text x="450" y="287" class="obj-count count-ok">计数 1（A）</text>
+
+  <rect x="240" y="380" width="120" height="70" rx="10" class="obj-alive"/>
+  <text x="300" y="404" class="obj-name">对象 C</text>
+  <text x="300" y="427" class="obj-count count-ok">计数 1（Root）</text>
+
+  <line x1="190" y1="265" x2="238" y2="265" class="edge"/>
+  <path d="M 190 295 L 238 410" class="edge"/>
+  <line x1="360" y1="265" x2="388" y2="265" class="edge"/>
+  <path d="M 450 240 Q 375 195 302 240" class="edge"/>
+
+  <!-- ===== 右栏：Root 断开引用后 ===== -->
+  <rect x="620" y="160" width="540" height="350" rx="12" class="panel"/>
+  <text x="890" y="188" class="panel-title">Root 断开引用后（GC 判定）</text>
+
+  <rect x="640" y="240" width="130" height="70" rx="10" class="root-disconnected"/>
+  <text x="705" y="265" class="obj-name" font-size="13px" fill="#78909c">GC Roots</text>
+  <text x="705" y="287" class="obj-count count-bad" font-size="10.5px">引用已断开</text>
+
+  <rect x="820" y="240" width="120" height="70" rx="10" class="obj-dead"/>
+  <text x="880" y="264" class="obj-name">对象 A</text>
+  <text x="880" y="287" class="obj-count count-bad">计数 1（B）</text>
+
+  <rect x="970" y="240" width="120" height="70" rx="10" class="obj-dead"/>
+  <text x="1030" y="264" class="obj-name">对象 B</text>
+  <text x="1030" y="287" class="obj-count count-bad">计数 1（A）</text>
+
+  <rect x="820" y="380" width="120" height="70" rx="10" stroke-dasharray="5,4" class="obj-dead"/>
+  <text x="880" y="404" class="obj-name" fill="#b71c1c">对象 C</text>
+  <text x="880" y="427" class="obj-status">已回收 ✓</text>
+
+  <line x1="770" y1="265" x2="818" y2="265" class="edge-broken"/>
+  <path d="M 770 295 L 818 410" class="edge-broken"/>
+  <line x1="940" y1="265" x2="968" y2="265" class="edge"/>
+  <path d="M 1030 240 Q 955 195 942 240" class="edge"/>
+  <text x="985" y="208" class="edge-label" fill="#c62828">循环引用</text>
+  <text x="950" y="330" class="obj-status" font-size="11px">无法回收</text>
+
+  <!-- ===== 图例 ===== -->
+  <line x1="60" y1="484" x2="96" y2="484" class="edge"/>
+  <text x="102" y="488" class="legend-text">正常引用</text>
+  <line x1="220" y1="484" x2="256" y2="484" class="edge-broken"/>
+  <text x="262" y="488" class="legend-text">已断开引用</text>
+  <rect x="380" y="476" width="16" height="16" rx="3" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="402" y="488" class="legend-text">无法回收 / 已回收</text>
+</svg>

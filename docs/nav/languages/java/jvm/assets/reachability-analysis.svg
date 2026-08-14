@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .panel { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .panel-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:15px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .root-box { fill:#E3F2FD; stroke:#1976d2; stroke-width:2; }
+      .root-name { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13.5px; font-weight:bold; fill:#01579b; text-anchor:middle; }
+      .root-desc { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:10.5px; fill:#546e7a; text-anchor:middle; }
+      .obj-reachable { fill:#E8F5E9; stroke:#388e3c; stroke-width:2; }
+      .obj-garbage { fill:#FFEBEE; stroke:#d32f2f; stroke-width:2; }
+      .obj-name { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:14px; font-weight:bold; fill:#37474F; text-anchor:middle; }
+      .obj-ok { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#2e7d32; text-anchor:middle; }
+      .obj-bad { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#c62828; text-anchor:middle; }
+      .edge { stroke:#546e7a; stroke-width:1.8; fill:none; marker-end:url(#arrowhead); }
+      .swatch-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#374151; }
+      .note-card { fill:#FFFDE7; stroke:#f9a825; stroke-width:1.5; }
+      .note-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#5d4037; text-anchor:start; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="640" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">可达性分析：从 GC Roots 出发标记存活对象</text>
+  <text x="600" y="66" class="sub">沿引用链可达的对象为存活对象；不可达的对象为垃圾，将被回收</text>
+
+  <!-- 图例（右上） -->
+  <rect x="940" y="88" width="16" height="16" rx="3" fill="#E8F5E9" stroke="#388e3c" stroke-width="1.5"/>
+  <text x="962" y="100" class="swatch-text">可达（存活）</text>
+  <rect x="1080" y="88" width="16" height="16" rx="3" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="1102" y="100" class="swatch-text">不可达（垃圾）</text>
+
+  <!-- ===== 左侧：GC Roots ===== -->
+  <rect x="40" y="100" width="300" height="440" rx="12" class="panel"/>
+  <text x="190" y="128" class="panel-title">GC Roots（根对象）</text>
+
+  <rect x="60" y="150" width="260" height="70" rx="10" class="root-box"/>
+  <text x="190" y="176" class="root-name">虚拟机栈</text>
+  <text x="190" y="198" class="root-desc">栈帧局部变量表引用的对象</text>
+
+  <rect x="60" y="240" width="260" height="70" rx="10" class="root-box"/>
+  <text x="190" y="266" class="root-name">方法区 · 静态变量</text>
+  <text x="190" y="288" class="root-desc">static 属性引用的对象</text>
+
+  <rect x="60" y="330" width="260" height="70" rx="10" class="root-box"/>
+  <text x="190" y="356" class="root-name">方法区 · 常量</text>
+  <text x="190" y="378" class="root-desc">常量池引用的对象</text>
+
+  <rect x="60" y="420" width="260" height="70" rx="10" class="root-box"/>
+  <text x="190" y="446" class="root-name">本地方法栈</text>
+  <text x="190" y="468" class="root-desc">JNI / Native 引用的对象</text>
+
+  <!-- ===== 对象图 ===== -->
+  <rect x="420" y="140" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="480" y="164" class="obj-name">对象 A</text>
+  <text x="480" y="187" class="obj-ok">可达</text>
+
+  <rect x="680" y="100" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="740" y="124" class="obj-name">对象 B</text>
+  <text x="740" y="147" class="obj-ok">可达</text>
+
+  <rect x="940" y="150" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="1000" y="174" class="obj-name">对象 D</text>
+  <text x="1000" y="197" class="obj-ok">可达</text>
+
+  <rect x="680" y="290" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="740" y="314" class="obj-name">对象 C</text>
+  <text x="740" y="337" class="obj-ok">可达</text>
+
+  <rect x="940" y="290" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="1000" y="314" class="obj-name">对象 E</text>
+  <text x="1000" y="337" class="obj-ok">可达</text>
+
+  <rect x="940" y="440" width="120" height="70" rx="10" class="obj-reachable"/>
+  <text x="1000" y="464" class="obj-name">对象 G</text>
+  <text x="1000" y="487" class="obj-ok">可达</text>
+
+  <rect x="680" y="440" width="120" height="70" rx="10" class="obj-garbage"/>
+  <text x="740" y="464" class="obj-name" fill="#b71c1c">对象 F</text>
+  <text x="740" y="487" class="obj-bad">不可达（垃圾）</text>
+
+  <!-- 引用箭头 -->
+  <line x1="322" y1="185" x2="416" y2="170" class="edge"/>
+  <line x1="322" y1="275" x2="676" y2="322" class="edge"/>
+  <line x1="322" y1="365" x2="936" y2="472" class="edge"/>
+  <line x1="322" y1="455" x2="936" y2="322" class="edge"/>
+  <line x1="540" y1="160" x2="676" y2="128" class="edge"/>
+  <line x1="800" y1="135" x2="936" y2="168" class="edge"/>
+  <line x1="800" y1="325" x2="936" y2="325" class="edge"/>
+
+  <rect x="40" y="560" width="1120" height="56" rx="12" class="note-card"/>
+  <text x="60" y="584" class="note-text">从 GC Roots 出发沿引用链可达 → 存活对象（绿色）；不可达 → 垃圾对象（红色），将被回收。</text>
+  <text x="60" y="604" class="note-text">循环引用的对象只要从 GC Roots 不可达，同样会被回收——这正是可达性分析优于引用计数法的原因。</text> -->
+</svg>

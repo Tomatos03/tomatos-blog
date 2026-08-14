@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .stw { fill:#FFEBEE; stroke:#d32f2f; stroke-width:2; }
+      .concurrent { fill:#E8F5E9; stroke:#388e3c; stroke-width:2; }
+      .block-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12.5px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .block-sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:10.5px; fill:#546e7a; text-anchor:middle; }
+      .block-stw { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#b71c1c; text-anchor:middle; }
+      .block-run { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#2e7d32; text-anchor:middle; }
+      .appbar-label { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#37474F; text-anchor:middle; }
+      .timeline-note { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#546e7a; text-anchor:middle; }
+      .card { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .card-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:14px; font-weight:bold; fill:#1A1A2E; text-anchor:start; }
+      .card-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11.5px; fill:#374151; text-anchor:start; }
+      .ptr-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .ptr-label { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; fill:#546e7a; text-anchor:middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="800" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">ZGC 垃圾回收流程（暂停 &lt;1ms）</text>
+  <text x="600" y="66" class="sub">JDK 15 转正：着色指针（Colored Pointers）+ 读屏障（Load Barrier），暂停时间与堆大小无关</text>
+
+  <!-- ===== 应用线程状态条 ===== -->
+  <text x="600" y="100" class="appbar-label">应用线程状态</text>
+  <rect x="80" y="112" width="1040" height="38" rx="6" fill="#E8F5E9" stroke="#388e3c" stroke-width="1.5"/>
+  <rect x="80" y="112" width="66" height="38" rx="6" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <rect x="580" y="112" width="66" height="38" rx="6" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <rect x="880" y="112" width="66" height="38" rx="6" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="113" y="131" class="block-stw">STW</text>
+  <text x="613" y="131" class="block-stw">STW</text>
+  <text x="913" y="131" class="block-stw">STW</text>
+  <text x="500" y="131" class="timeline-note" font-size="11px">运行中（几乎全程并发）</text>
+
+  <!-- 时间轴 -->
+  <line x1="80" y1="200" x2="1120" y2="200" stroke="#90a4ae" stroke-width="2"/>
+  <line x1="1120" y1="200" x2="1150" y2="200" stroke="#546e7a" stroke-width="1.8" marker-end="url(#arrowhead)"/>
+  <text x="1160" y="204" class="timeline-note" text-anchor="start">时间 →</text>
+
+  <!-- 阶段分界线 -->
+  <line x1="80" y1="150" x2="80" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="150" y1="150" x2="150" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="580" y1="150" x2="580" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="650" y1="150" x2="650" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="880" y1="150" x2="880" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="950" y1="150" x2="950" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="1120" y1="150" x2="1120" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- ===== 阶段块 ===== -->
+  <rect x="80" y="230" width="66" height="100" rx="10" class="stw"/>
+  <text x="113" y="256" class="block-title">①</text>
+  <text x="113" y="276" class="block-stw">STW</text>
+  <text x="113" y="296" class="block-sub">标记开始</text>
+
+  <rect x="150" y="230" width="426" height="100" rx="10" class="concurrent"/>
+  <text x="363" y="256" class="block-title">② 并发标记 Concurrent Mark</text>
+  <text x="363" y="278" class="block-run">与应用线程并发执行（不 STW）</text>
+  <text x="363" y="300" class="block-sub">遍历对象图，标记所有存活对象</text>
+
+  <rect x="580" y="230" width="66" height="100" rx="10" class="stw"/>
+  <text x="613" y="256" class="block-title">③</text>
+  <text x="613" y="276" class="block-stw">STW</text>
+  <text x="613" y="296" class="block-sub">标记结束</text>
+
+  <rect x="650" y="230" width="226" height="100" rx="10" class="concurrent"/>
+  <text x="763" y="256" class="block-title">④ 并发预备重映射</text>
+  <text x="763" y="278" class="block-run">Prepare Relocation（并发）</text>
+  <text x="763" y="300" class="block-sub">计算迁移集、构建重映射表</text>
+
+  <rect x="880" y="230" width="66" height="100" rx="10" class="stw"/>
+  <text x="913" y="256" class="block-title">⑤</text>
+  <text x="913" y="276" class="block-stw">STW</text>
+  <text x="913" y="296" class="block-sub">迁移开始</text>
+
+  <rect x="950" y="230" width="170" height="100" rx="10" class="concurrent"/>
+  <text x="1035" y="256" class="block-title">⑥ 并发整理 + 重映射</text>
+  <text x="1035" y="278" class="block-run">Relocation &amp; Remap（并发）</text>
+  <text x="1035" y="300" class="block-sub">移动对象并更新引用，读屏障</text>
+
+  <text x="600" y="365" class="timeline-note">图中省略"迁移结束"等极短 STW 与辅助并发阶段</text>
+
+  <!-- ===== 说明卡片 ===== -->
+  <rect x="40" y="395" width="360" height="170" rx="12" class="card"/>
+  <text x="60" y="423" class="card-title">着色指针（Colored Pointers）</text>
+  <text x="60" y="451" class="card-text">64 位指针中抽取 4 位作为颜色状态：</text>
+  <text x="60" y="473" class="card-text">Marked0 / Marked1 / Remapped / Finalizable，</text>
+  <text x="60" y="495" class="card-text">其余 42 位为对象地址（约 4TB 堆空间）。</text>
+  <text x="60" y="517" class="card-text">对象状态变化只需修改指针颜色，</text>
+  <text x="60" y="539" class="card-text">无需访问或锁定对象本身。</text>
+
+  <rect x="420" y="395" width="360" height="170" rx="12" class="card"/>
+  <text x="440" y="423" class="card-title">读屏障（Load Barrier）</text>
+  <text x="440" y="451" class="card-text">应用线程每次读取对象引用时都会检查</text>
+  <text x="440" y="473" class="card-text">指针颜色：若对象正在被迁移，则通过</text>
+  <text x="440" y="495" class="card-text">重映射表自动获取新地址。</text>
+  <text x="440" y="517" class="card-text">因此并发整理期间应用线程无需暂停，</text>
+  <text x="440" y="539" class="card-text">读写始终指向对象最新位置。</text>
+
+  <rect x="800" y="395" width="360" height="170" rx="12" class="card"/>
+  <text x="820" y="423" class="card-title">特点与演进</text>
+  <text x="820" y="451" class="card-text">暂停 &lt;1ms 且与堆大小无关，可支撑 TB 级堆；</text>
+  <text x="820" y="473" class="card-text">并发整理无碎片；但内存占用与 CPU 开销较高，</text>
+  <text x="820" y="495" class="card-text">小堆场景优势不明显。</text>
+  <text x="820" y="517" class="card-text">JDK 11 实验特性 → JDK 15 转正，</text>
+  <text x="820" y="539" class="card-text">JDK 21 起部分平台默认使用。</text>
+
+  <!-- ===== 着色指针布局 ===== -->
+  <text x="600" y="618" class="ptr-title">着色指针（64 位）布局</text>
+  <rect x="80" y="632" width="1040" height="52" rx="4" fill="#FFFFFF" stroke="#90a4ae" stroke-width="1.5"/>
+  <rect x="82" y="634" width="288.5" height="48" rx="2" fill="#ECEFF1"/>
+  <rect x="372.5" y="634" width="678.5" height="48" rx="2" fill="#E3F2FD"/>
+  <rect x="1053" y="634" width="16" height="48" rx="2" fill="#FFCDD2"/>
+  <rect x="1071" y="634" width="16" height="48" rx="2" fill="#FFCDD2"/>
+  <rect x="1089" y="634" width="16" height="48" rx="2" fill="#FFCDD2"/>
+  <rect x="1107" y="634" width="11" height="48" rx="2" fill="#FFCDD2"/>
+  <text x="226" y="706" class="ptr-label">未用 18 位</text>
+  <text x="712" y="706" class="ptr-label" font-weight="bold" fill="#01579b">对象地址 42 位（约 4TB）</text>
+  <text x="600" y="732" class="ptr-label">颜色位：Marked0 / Marked1 / Remapped / Finalizable —— 对象状态仅通过指针颜色标识，由读屏障维护</text>
+</svg>

@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .stw { fill:#FFEBEE; stroke:#d32f2f; stroke-width:2; }
+      .concurrent { fill:#E8F5E9; stroke:#388e3c; stroke-width:2; }
+      .block-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12.5px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .block-sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:10.5px; fill:#546e7a; text-anchor:middle; }
+      .block-stw { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#b71c1c; text-anchor:middle; }
+      .block-run { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11px; font-weight:bold; fill:#2e7d32; text-anchor:middle; }
+      .appbar-label { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#37474F; text-anchor:middle; }
+      .edge { stroke:#546e7a; stroke-width:1.8; fill:none; marker-end:url(#arrowhead); }
+      .timeline-note { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#546e7a; text-anchor:middle; }
+      .card { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .card-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:14px; font-weight:bold; fill:#1A1A2E; text-anchor:start; }
+      .card-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11.5px; fill:#374151; text-anchor:start; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="700" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">CMS 并发标记清除工作流程</text>
+  <text x="600" y="66" class="sub">ParNew（新生代，并行 STW）+ CMS（老年代，并发）：目标是缩短停顿时间</text>
+
+  <!-- ===== 应用线程状态条 ===== -->
+  <text x="600" y="100" class="appbar-label">应用线程状态</text>
+  <rect x="80" y="112" width="1040" height="38" rx="6" fill="#E8F5E9" stroke="#388e3c" stroke-width="1.5"/>
+  <rect x="80" y="112" width="70" height="38" rx="6" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <rect x="570" y="112" width="70" height="38" rx="6" fill="#FFEBEE" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="115" y="131" class="block-stw">STW</text>
+  <text x="605" y="131" class="block-stw">STW</text>
+  <text x="500" y="131" class="timeline-note" font-size="11px">运行中（与应用并发）</text>
+
+  <!-- 时间轴 -->
+  <line x1="80" y1="200" x2="1120" y2="200" stroke="#90a4ae" stroke-width="2"/>
+  <line x1="1120" y1="200" x2="1150" y2="200" class="edge"/>
+  <text x="1160" y="204" class="timeline-note" text-anchor="start">时间 →</text>
+
+  <!-- 阶段分界线 -->
+  <line x1="80" y1="150" x2="80" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="200" y1="150" x2="200" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="710" y1="150" x2="710" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="890" y1="150" x2="890" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="1120" y1="150" x2="1120" y2="330" stroke="#90a4ae" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- ===== 四阶段 ===== -->
+  <!-- ① 初始标记 -->
+  <rect x="80" y="230" width="112" height="100" rx="10" class="stw"/>
+  <text x="136" y="256" class="block-title">① 初始标记</text>
+  <text x="136" y="276" class="block-stw">STW（很短）</text>
+  <text x="136" y="296" class="block-sub">标记 GC Roots</text>
+  <text x="136" y="312" class="block-sub">直接关联对象</text>
+
+  <!-- ② 并发标记 -->
+  <rect x="200" y="230" width="510" height="100" rx="10" class="concurrent"/>
+  <text x="455" y="256" class="block-title">② 并发标记 Concurrent Mark</text>
+  <text x="455" y="278" class="block-run">与应用线程并发执行（不 STW）</text>
+  <text x="455" y="300" class="block-sub">从 GC Roots 出发遍历对象图，标记所有可达对象</text>
+  <text x="455" y="318" class="block-sub">此阶段产生的垃圾为浮动垃圾，本次不回收</text>
+
+  <!-- ③ 重新标记 -->
+  <rect x="718" y="230" width="172" height="100" rx="10" class="stw"/>
+  <text x="804" y="256" class="block-title">③ 重新标记</text>
+  <text x="804" y="276" class="block-stw">STW（较短）</text>
+  <text x="804" y="296" class="block-sub">修正并发期间</text>
+  <text x="804" y="312" class="block-sub">引用变化（增量更新）</text>
+
+  <!-- ④ 并发清除 -->
+  <rect x="898" y="230" width="222" height="100" rx="10" class="concurrent"/>
+  <text x="1009" y="256" class="block-title">④ 并发清除</text>
+  <text x="1009" y="278" class="block-run">与应用线程并发</text>
+  <text x="1009" y="300" class="block-sub">清除标记为垃圾的对象，</text>
+  <text x="1009" y="318" class="block-sub">产生内存碎片</text>
+
+  <!-- 阶段间箭头 -->
+  <line x1="194" y1="280" x2="198" y2="280" class="edge"/>
+  <line x1="712" y1="280" x2="716" y2="280" class="edge"/>
+  <line x1="892" y1="280" x2="896" y2="280" class="edge"/>
+
+  <text x="600" y="365" class="timeline-note">红色 = STW 暂停阶段（短暂）；绿色 = 与应用线程并发阶段</text>
+
+  <!-- ===== 说明卡片 ===== -->
+  <rect x="40" y="395" width="360" height="160" rx="12" class="card"/>
+  <text x="60" y="423" class="card-title">浮动垃圾（Floating Garbage）</text>
+  <text x="60" y="451" class="card-text">并发标记/清除期间新产生的垃圾对象，</text>
+  <text x="60" y="473" class="card-text">本次循环无法回收，只能留待下一次 GC。</text>
+  <text x="60" y="495" class="card-text">因此 CMS 必须预留空间，不能等老年代</text>
+  <text x="60" y="517" class="card-text">完全占满才触发（默认占用 92% 即触发）。</text>
+
+  <rect x="420" y="395" width="360" height="160" rx="12" class="card"/>
+  <text x="440" y="423" class="card-title">并发模式失败（Concurrent Mode Failure）</text>
+  <text x="440" y="451" class="card-text">并发阶段老年代空间被耗尽时，</text>
+  <text x="440" y="473" class="card-text">CMS 会退化为 Serial Old 执行 Full GC，</text>
+  <text x="440" y="495" class="card-text">全程 STW，停顿时间反而更长。</text>
+  <text x="440" y="517" class="card-text">可调低触发阈值提前回收来规避。</text>
+
+  <rect x="800" y="395" width="360" height="160" rx="12" class="card"/>
+  <text x="820" y="423" class="card-title">碎片与淘汰</text>
+  <text x="820" y="451" class="card-text">标记-清除算法产生内存碎片，大对象分配</text>
+  <text x="820" y="473" class="card-text">可能失败，最终触发 Full GC 做整理。</text>
+  <text x="820" y="495" class="card-text">CMS 在 JDK 9 被标记为废弃（Deprecated），</text>
+  <text x="820" y="517" class="card-text">JDK 14 起被正式移除，由 G1 取代。</text>
+</svg>

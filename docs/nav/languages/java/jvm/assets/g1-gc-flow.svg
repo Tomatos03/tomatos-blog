@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <style>
+      .title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:26px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .sub { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; fill:#607D8B; text-anchor:middle; }
+      .panel { fill:#FFFFFF; stroke:#E0E4E8; stroke-width:1; }
+      .panel-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:16px; font-weight:bold; fill:#1A1A2E; text-anchor:middle; }
+      .region { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:10px; fill:#78909c; text-anchor:middle; dominant-baseline:middle; }
+      .humongous-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:10px; font-weight:bold; fill:#b71c1c; text-anchor:middle; }
+      .phase { fill:#FFFFFF; stroke:#1976d2; stroke-width:2; }
+      .phase-title { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#01579b; text-anchor:start; }
+      .phase-line { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#37474F; text-anchor:start; }
+      .phase-num { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:13px; font-weight:bold; fill:#FFFFFF; text-anchor:middle; dominant-baseline:middle; }
+      .edge { stroke:#546e7a; stroke-width:1.8; fill:none; marker-end:url(#arrowhead); }
+      .legend-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12px; fill:#374151; }
+      .card { fill:#FFFDE7; stroke:#f9a825; stroke-width:1.5; }
+      .card-text { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:11.5px; fill:#5d4037; text-anchor:start; }
+      .bottom-note { font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size:12.5px; fill:#607D8B; text-anchor:middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="800" fill="#F5F7FA"/>
+
+  <text x="600" y="40" class="title">G1（Garbage-First）垃圾回收流程</text>
+  <text x="600" y="66" class="sub">JDK 9+ 默认收集器：整堆 Region 化，并发与并行结合，停顿可预测</text>
+
+  <!-- ===== 左侧：Region 化堆布局 ===== -->
+  <rect x="40" y="90" width="600" height="470" rx="12" class="panel"/>
+  <text x="340" y="116" class="panel-title">堆内存（划分为大小相等的 Region，默认 2048 个）</text>
+
+  <!-- Row 0 -->
+  <rect x="60" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="86" y="158" class="region">E</text>
+  <rect x="116" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="142" y="158" class="region">E</text>
+  <rect x="172" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="198" y="158" class="region">E</text>
+  <rect x="228" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="254" y="158" class="region">E</text>
+  <rect x="284" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="310" y="158" class="region">E</text>
+  <rect x="340" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="366" y="158" class="region">E</text>
+  <rect x="396" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="422" y="158" class="region">E</text>
+  <rect x="452" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="478" y="158" class="region">E</text>
+  <rect x="508" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="534" y="158" class="region">E</text>
+  <rect x="564" y="132" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="590" y="158" class="region">E</text>
+  <!-- Row 1 -->
+  <rect x="60" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="86" y="214" class="region">E</text>
+  <rect x="116" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="142" y="214" class="region">E</text>
+  <rect x="172" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="198" y="214" class="region">E</text>
+  <rect x="228" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="254" y="214" class="region">E</text>
+  <rect x="284" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="310" y="214" class="region">E</text>
+  <rect x="340" y="188" width="52" height="52" rx="4" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/><text x="366" y="214" class="region">E</text>
+  <rect x="396" y="188" width="52" height="52" rx="4" fill="#FFE0B2" stroke="#ef6c00" stroke-width="1.5"/><text x="422" y="214" class="region">S</text>
+  <rect x="452" y="188" width="52" height="52" rx="4" fill="#FFE0B2" stroke="#ef6c00" stroke-width="1.5"/><text x="478" y="214" class="region">S</text>
+  <rect x="508" y="188" width="52" height="52" rx="4" fill="#ECEFF1" stroke="#90a4ae" stroke-width="1.5"/><text x="534" y="214" class="region">F</text>
+  <rect x="564" y="188" width="52" height="52" rx="4" fill="#ECEFF1" stroke="#90a4ae" stroke-width="1.5"/><text x="590" y="214" class="region">F</text>
+  <!-- Row 2 -->
+  <rect x="60" y="244" width="52" height="52" rx="4" fill="#FFE0B2" stroke="#ef6c00" stroke-width="1.5"/><text x="86" y="270" class="region">S</text>
+  <rect x="116" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="142" y="270" class="region">O</text>
+  <rect x="172" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="198" y="270" class="region">O</text>
+  <rect x="228" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="254" y="270" class="region">O</text>
+  <rect x="284" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="310" y="270" class="region">O</text>
+  <rect x="340" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="366" y="270" class="region">O</text>
+  <rect x="396" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="422" y="270" class="region">O</text>
+  <rect x="452" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="478" y="270" class="region">O</text>
+  <rect x="508" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="534" y="270" class="region">O</text>
+  <rect x="564" y="244" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="590" y="270" class="region">O</text>
+  <!-- Row 3 -->
+  <rect x="60" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="86" y="326" class="region">O</text>
+  <rect x="116" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="142" y="326" class="region">O</text>
+  <rect x="172" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="198" y="326" class="region">O</text>
+  <rect x="228" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="254" y="326" class="region">O</text>
+  <rect x="284" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="310" y="326" class="region">O</text>
+  <rect x="340" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="366" y="326" class="region">O</text>
+  <rect x="396" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="422" y="326" class="region">O</text>
+  <rect x="452" y="300" width="52" height="52" rx="4" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/><text x="478" y="326" class="region">O</text>
+  <rect x="508" y="300" width="112" height="52" rx="4" fill="#FFCDD2" stroke="#d32f2f" stroke-width="2"/>
+  <text x="564" y="318" class="humongous-text">Humongous</text>
+  <text x="564" y="336" class="humongous-text">大对象</text>
+
+  <!-- 图例 -->
+  <rect x="60" y="378" width="16" height="16" rx="3" fill="#BBDEFB" stroke="#1976d2" stroke-width="1.5"/>
+  <text x="84" y="390" class="legend-text">Eden 区</text>
+  <rect x="210" y="378" width="16" height="16" rx="3" fill="#FFE0B2" stroke="#ef6c00" stroke-width="1.5"/>
+  <text x="234" y="390" class="legend-text">Survivor 区</text>
+  <rect x="360" y="378" width="16" height="16" rx="3" fill="#D1C4E9" stroke="#5e35b1" stroke-width="1.5"/>
+  <text x="384" y="390" class="legend-text">Old 区</text>
+  <rect x="60" y="418" width="16" height="16" rx="3" fill="#FFCDD2" stroke="#d32f2f" stroke-width="1.5"/>
+  <text x="84" y="430" class="legend-text">Humongous：大对象直接进入老年代</text>
+  <rect x="400" y="418" width="16" height="16" rx="3" fill="#ECEFF1" stroke="#90a4ae" stroke-width="1.5"/>
+  <text x="424" y="430" class="legend-text">Free：空闲 Region</text>
+
+  <!-- RSet 卡片 -->
+  <rect x="60" y="470" width="560" height="58" rx="10" class="card"/>
+  <text x="76" y="492" class="card-text">RSet（Remembered Set）：记录其他 Region 对本 Region 中对象的引用，</text>
+  <text x="76" y="514" class="card-text">GC 时无需全堆扫描即可定位跨 Region 引用，是 G1 高效回收的关键。</text>
+
+  <!-- ===== 右侧：回收周期 ===== -->
+  <rect x="680" y="90" width="480" height="470" rx="12" class="panel"/>
+  <text x="920" y="116" class="panel-title">回收周期（停顿可预测）</text>
+
+  <rect x="700" y="132" width="440" height="88" rx="10" class="phase"/>
+  <circle cx="724" cy="156" r="13" fill="#1976d2"/>
+  <text x="724" y="156" class="phase-num">①</text>
+  <text x="754" y="160" class="phase-title">Young GC（新生代回收，STW）</text>
+  <text x="754" y="182" class="phase-line">Eden 区占满时触发，并行将存活对象复制到</text>
+  <text x="754" y="204" class="phase-line">Survivor 或晋升 Old；回收后的 Region 变为 Free</text>
+
+  <rect x="700" y="240" width="440" height="88" rx="10" class="phase"/>
+  <circle cx="724" cy="264" r="13" fill="#1976d2"/>
+  <text x="724" y="264" class="phase-num">②</text>
+  <text x="754" y="268" class="phase-title">并发标记周期（Concurrent Marking）</text>
+  <text x="754" y="290" class="phase-line">堆占用率达到阈值（默认 45%）后启动：初始标记(STW)</text>
+  <text x="754" y="312" class="phase-line">→ 根区扫描 → 并发标记 → 重新标记(STW) → 清理</text>
+
+  <rect x="700" y="348" width="440" height="88" rx="10" class="phase"/>
+  <circle cx="724" cy="372" r="13" fill="#1976d2"/>
+  <text x="724" y="372" class="phase-num">③</text>
+  <text x="754" y="376" class="phase-title">Mixed GC（混合回收）</text>
+  <text x="754" y="398" class="phase-line">根据回收价值（垃圾占比）选取 CSet（Region 集合），</text>
+  <text x="754" y="420" class="phase-line">优先回收 Old 区中垃圾最多的 Region，控制停顿时间</text>
+
+  <rect x="700" y="456" width="440" height="88" rx="10" class="phase"/>
+  <circle cx="724" cy="480" r="13" fill="#1976d2"/>
+  <text x="724" y="480" class="phase-num">④</text>
+  <text x="754" y="484" class="phase-title">停顿预测模型</text>
+  <text x="754" y="506" class="phase-line">基于历史数据预测各 Region 回收耗时，按</text>
+  <text x="754" y="528" class="phase-line">按停顿目标（默认 200ms）动态调整回收量</text>
+
+  <line x1="920" y1="220" x2="920" y2="238" class="edge"/>
+  <line x1="920" y1="328" x2="920" y2="346" class="edge"/>
+  <line x1="920" y1="436" x2="920" y2="454" class="edge"/>
+
+  <!-- 底部说明 -->
+  <text x="600" y="580" class="bottom-note">G1 以复制方式回收，无内存碎片；Region 大小默认 1MB~32MB</text>
+  <text x="600" y="606" class="bottom-note">堆较小时（&lt;4GB）G1 优势不明显，可能不如 Parallel</text>
+</svg>
