@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e2030"/>
+      <stop offset="55%" stop-color="#24273a"/>
+      <stop offset="100%" stop-color="#181926"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#8aadf4"/>
+      <stop offset="50%" stop-color="#c6a0f6"/>
+      <stop offset="100%" stop-color="#f5a97f"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#313244"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- 背景 -->
+  <rect x="0" y="0" width="1200" height="420" fill="url(#bg)"/>
+  <rect x="0" y="0" width="1200" height="420" fill="url(#dots)"/>
+
+  <!-- 顶部渐变条 -->
+  <rect x="0" y="0" width="1200" height="5" fill="url(#accent)"/>
+
+  <!-- 左侧装饰圆点 -->
+  <circle cx="70" cy="80" r="6" fill="#8aadf4" opacity="0.7"/>
+  <circle cx="95" cy="112" r="4" fill="#a6da95" opacity="0.6"/>
+  <circle cx="60" cy="140" r="3" fill="#eed49f" opacity="0.6"/>
+  <circle cx="105" cy="60" r="3" fill="#f5a97f" opacity="0.5"/>
+
+  <!-- 右侧大括号装饰 -->
+  <text x="650" y="150" font-family="'Courier New', monospace" font-size="180" font-weight="300" fill="#8aadf4" opacity="0.14">{</text>
+  <text x="1060" y="340" font-family="'Courier New', monospace" font-size="140" font-weight="300" fill="#c6a0f6" opacity="0.12">}</text>
+
+  <!-- 代码窗口装饰 -->
+  <g transform="translate(760, 60)" opacity="0.95">
+    <rect x="0" y="0" width="360" height="110" rx="10" fill="#181926" stroke="#3a3f5c" stroke-width="1.2" filter="url(#shadow)"/>
+    <circle cx="16" cy="18" r="5" fill="#ed8796"/>
+    <circle cx="34" cy="18" r="5" fill="#eed49f"/>
+    <circle cx="52" cy="18" r="5" fill="#a6da95"/>
+    <text x="70" y="23" font-family="'Courier New', monospace" font-size="12" fill="#5b6078">blog.md</text>
+    <text x="18" y="48" font-family="'Courier New', monospace" font-size="13" fill="#8aadf4"># 记录 · 分享 · 成长</text>
+    <text x="18" y="70" font-family="'Courier New', monospace" font-size="13" fill="#cad3f5">const <tspan fill="#c6a0f6">knowledge</tspan> = <tspan fill="#a6da95">'growth'</tspan>;</text>
+    <text x="18" y="92" font-family="'Courier New', monospace" font-size="13" fill="#f5a97f">while (true) <tspan fill="#cad3f5">learn()</tspan>;</text>
+  </g>
+
+  <!-- 标题 -->
+  <text x="90" y="190" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" font-size="76" font-weight="700" fill="#cad3f5" filter="url(#glow)">Tomatos<tspan fill="#8aadf4">'s</tspan> <tspan fill="url(#accent)">Blog</tspan></text>
+
+  <!-- 副标题 -->
+  <text x="92" y="240" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" font-size="24" fill="#a5adcb">个人技术博客 · 编程学习 · 知识沉淀</text>
+
+  <!-- 标语 -->
+  <text x="92" y="278" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" font-size="16" fill="#6e7395">Stay hungry, stay foolish — 记录每一个值得沉淀的知识点</text>
+
+  <!-- 底部技术栈标签 -->
+  <g font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" font-size="14" font-weight="600">
+    <rect x="90" y="320" width="92" height="34" rx="17" fill="#313244" stroke="#8aadf4" stroke-width="1.4"/>
+    <text x="136" y="342" text-anchor="middle" fill="#8aadf4">Java</text>
+
+    <rect x="196" y="320" width="112" height="34" rx="17" fill="#313244" stroke="#c6a0f6" stroke-width="1.4"/>
+    <text x="252" y="342" text-anchor="middle" fill="#c6a0f6">TypeScript</text>
+
+    <rect x="322" y="320" width="92" height="34" rx="17" fill="#313244" stroke="#a6da95" stroke-width="1.4"/>
+    <text x="368" y="342" text-anchor="middle" fill="#a6da95">Vue3</text>
+
+    <rect x="428" y="320" width="82" height="34" rx="17" fill="#313244" stroke="#f5a97f" stroke-width="1.4"/>
+    <text x="469" y="342" text-anchor="middle" fill="#f5a97f">Rust</text>
+
+    <rect x="524" y="320" width="104" height="34" rx="17" fill="#313244" stroke="#f4dbd6" stroke-width="1.4"/>
+    <text x="576" y="342" text-anchor="middle" fill="#f4dbd6">MySQL</text>
+
+    <rect x="642" y="320" width="94" height="34" rx="17" fill="#313244" stroke="#eed49f" stroke-width="1.4"/>
+    <text x="689" y="342" text-anchor="middle" fill="#eed49f">Redis</text>
+
+    <rect x="750" y="320" width="110" height="34" rx="17" fill="#313244" stroke="#a5adcb" stroke-width="1.4"/>
+    <text x="805" y="342" text-anchor="middle" fill="#a5adcb">VitePress</text>
+  </g>
+
+  <!-- 底部装饰线 -->
+  <line x1="90" y1="385" x2="1110" y2="385" stroke="#3a3f5c" stroke-width="1"/>
+  <circle cx="600" cy="385" r="4" fill="url(#accent)"/>
+  <circle cx="560" cy="385" r="2.5" fill="#8aadf4" opacity="0.6"/>
+  <circle cx="640" cy="385" r="2.5" fill="#f5a97f" opacity="0.6"/>
+</svg>
