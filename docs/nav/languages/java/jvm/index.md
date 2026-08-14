@@ -531,16 +531,38 @@ CMS（Concurrent Mark Sweep）是第一个真正意义上的**并发**收集器�
 
 ##### G1（Garbage-First）
 
-G1 是 JDK 9+ 的默认收集器。它将整个堆划分为大小相等的 **Region**（默认 2048 个），逻辑上仍区分 Eden / Survivor / Old，但回收单位是 Region 而非整个代。G1 每次根据"回收价值"（垃圾占比最高、回收收益最大的 Region）优先回收，并通过停顿预测模型控制停顿时间。
+G1 是 JDK 9+ 的默认收集器。它将整个堆划分为大小相等的 **Region**（默认 2048 个），逻辑上仍区分 Eden / Survivor / Old，但回收单位是 Region 而非整个代。回收时优先挑选**垃圾占比最高、回收收益最大**的 Region（"Garbage-First" 名字的由来），并通过停顿预测模型把单次停顿控制在目标以内。
+
+G1 的回收动作只有两种，都是 **STW + 并行复制**：
+
+| 回收动作 | 触发时机 | 回收对象 |
+| --- | --- | --- |
+| **Young GC** | Eden Region 被新对象占满 | 全部年轻代 Region（Eden + Survivor） |
+| **Mixed GC** | 一次并发标记周期结束后 | 年轻代 + 老年代中垃圾占比最高的部分 Region |
+
+两种动作**不是串联的一次性流程，而是两个独立循环**：日常工作以 Young GC 为主，Mixed GC 按需穿插。
+
+**循环一：Young GC（高频，反复进行）**
+
+1. 新对象持续分配在 Eden Region，Eden 逐渐被占满
+2. Eden 占满触发 Young GC（STW）：多线程并行把存活对象复制到 Survivor，达到年龄阈值后晋升 Old；复制时借助 RSet 快速定位跨 Region 引用，无需全堆扫描
+3. 被清空的 Region 变为 Free、重新投入分配，回到第 1 步
+
+**循环二：并发标记 + Mixed GC（低频，按需进行）**
+
+1. **触发**：堆占用率达到 `-XX:InitiatingHeapOccupancyPercent`（默认 45%），说明老年代已积累到需要回收的程度
+2. **并发标记周期**——只负责"找出老年代里哪些 Region 垃圾多"，本身不回收，各子阶段穿插在多次 Young GC 之间完成：
+   - **初始标记**（STW，极短）：标记 GC Roots 直接可达的对象（与一次 Young GC 共用停顿）
+   - **根区扫描**：扫描 Survivor 中指向老年代的引用，作为并发标记的起点
+   - **并发标记**：与应用线程并行遍历对象图（三色标记 + SATB 写屏障，见垃圾识别一节）
+   - **重新标记**（STW）：补标并发期间新增的漏标对象
+   - **清理**（STW，很短）：统计各 Region 存活对象占比，更新回收价值排序
+3. **Mixed GC**：标记周期结束后连续进行若干次，每次选取垃圾占比最高的若干 Old Region 作为 CSet（本次回收的 Region 集合），连同年轻代一起 STW 复制回收；单次回收量由停顿预测模型控制（默认 ≤200ms），因此一次标记通常对应多次 Mixed GC
+4. 堆占用率回落后停止 Mixed GC，回到只做 Young GC 的状态
+
+**停顿预测模型**不是独立阶段，而是贯穿始终的"调度器"：基于历史回收数据预测各 Region 的回收耗时，按 `-XX:MaxGCPauseMillis`（默认 200ms）动态决定每次 Mixed GC 的回收量。
 
 ![G1 垃圾回收流程](assets/g1-gc-flow.svg)
-
-**回收流程：**
-
-1. **Young GC**（STW）：Eden 区占满时触发，多线程并行将存活对象复制到 Survivor 或晋升 Old，回收后的 Region 变为 Free
-2. **并发标记周期**：堆占用率达 `-XX:InitiatingHeapOccupancyPercent`（默认 45%）后启动——初始标记(STW) → 根区扫描 → 并发标记 → 重新标记(STW) → 清理（标记阶段基于三色标记 + SATB 写屏障，见垃圾识别一节）
-3. **Mixed GC**（混合回收）：根据回收价值选取 CSet（Region 集合），优先回收 Old 区中垃圾最多的 Region
-4. **停顿预测模型**：基于历史回收数据预测耗时，按 `-XX:MaxGCPauseMillis`（默认 200ms）动态调整回收量
 
 **关键技术：** RSet（Remembered Set）记录跨 Region 引用，避免全堆扫描；超过 Region 一半的大对象（Humongous）直接进入老年代；
 
