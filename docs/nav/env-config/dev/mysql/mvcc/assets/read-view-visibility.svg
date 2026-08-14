@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 760" width="1240" height="760">
+  <defs>
+    <style>
+      .title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 26px; font-weight: bold; fill: #1A1A2E; text-anchor: middle; }
+      .start-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 15px; font-weight: bold; fill: #0d47a1; text-anchor: middle; dominant-baseline: middle; }
+      .decision-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; fill: #4a3b00; text-anchor: middle; dominant-baseline: middle; }
+      .visible-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; font-weight: bold; fill: #1b5e20; text-anchor: middle; dominant-baseline: middle; }
+      .invisible-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; font-weight: bold; fill: #b71c1c; text-anchor: middle; dominant-baseline: middle; }
+      .edge { stroke: #546e7a; stroke-width: 1.8; fill: none; marker-end: url(#arrowhead); }
+      .edge-label { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; font-weight: bold; fill: #455a64; text-anchor: middle; }
+      .legend-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; fill: #374151; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#546e7a"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1240" height="760" fill="#F5F7FA"/>
+
+  <text x="620" y="48" class="title">读视图（Read View）可见性判断流程</text>
+
+  <!-- 开始节点 -->
+  <rect x="362" y="76" width="300" height="50" rx="25" fill="#E3F2FD" stroke="#1976d2" stroke-width="2"/>
+  <text x="512" y="101" class="start-text">读取记录版本 trx_id</text>
+
+  <!-- 判断1: trx_id == creator_trx_id? -->
+  <polygon points="512,164 652,209 512,254 372,209" fill="#FFF9C4" stroke="#fbc02d" stroke-width="2"/>
+  <text x="512" y="209" class="decision-text" font-size="12.5px">trx_id == creator_trx_id ?</text>
+
+  <!-- 可见1 -->
+  <rect x="700" y="191" width="190" height="40" rx="20" fill="#E8F5E9" stroke="#388e3c" stroke-width="2"/>
+  <text x="795" y="211" class="visible-text">可见（自己修改）</text>
+
+  <!-- 判断2: trx_id < min_trx_id? -->
+  <polygon points="512,302 652,347 512,392 372,347" fill="#FFF9C4" stroke="#fbc02d" stroke-width="2"/>
+  <text x="512" y="347" class="decision-text" font-size="13px">trx_id &lt; min_trx_id ?</text>
+
+  <!-- 可见2 -->
+  <rect x="700" y="329" width="190" height="40" rx="20" fill="#E8F5E9" stroke="#388e3c" stroke-width="2"/>
+  <text x="795" y="349" class="visible-text">可见（已提交）</text>
+
+  <!-- 判断3: trx_id >= max_trx_id? -->
+  <polygon points="512,440 652,485 512,530 372,485" fill="#FFF9C4" stroke="#fbc02d" stroke-width="2"/>
+  <text x="512" y="485" class="decision-text" font-size="13px">trx_id ≥ max_trx_id ?</text>
+
+  <!-- 不可见3 -->
+  <rect x="700" y="467" width="190" height="40" rx="20" fill="#FFEBEE" stroke="#d32f2f" stroke-width="2"/>
+  <text x="795" y="487" class="invisible-text">不可见（未来事务）</text>
+
+  <!-- 判断4: trx_id in m_ids? -->
+  <polygon points="512,578 652,623 512,668 372,623" fill="#FFF9C4" stroke="#fbc02d" stroke-width="2"/>
+  <text x="512" y="623" class="decision-text" font-size="12.5px">trx_id 在活跃事务列表 m_ids 中？</text>
+
+  <!-- 不可见4 -->
+  <rect x="700" y="605" width="190" height="40" rx="20" fill="#FFEBEE" stroke="#d32f2f" stroke-width="2"/>
+  <text x="795" y="625" class="invisible-text">不可见（未提交）</text>
+
+  <!-- 可见5（判断4为否） -->
+  <rect x="180" y="596" width="170" height="40" rx="20" fill="#E8F5E9" stroke="#388e3c" stroke-width="2"/>
+  <text x="265" y="616" class="visible-text">可见（已提交）</text>
+
+  <!-- 回溯节点 -->
+  <rect x="362" y="706" width="300" height="44" rx="10" fill="#FFEBEE" stroke="#d32f2f" stroke-width="2"/>
+  <text x="512" y="728" class="invisible-text">沿 DB_ROLL_PTR 查找上一版本</text>
+
+  <!-- 连接线 -->
+  <line x1="512" y1="126" x2="512" y2="162" class="edge"/>
+
+  <line x1="652" y1="209" x2="698" y2="211" class="edge"/>
+  <text x="676" y="200" class="edge-label">是</text>
+  <line x1="512" y1="254" x2="512" y2="300" class="edge"/>
+  <text x="526" y="282" class="edge-label">否</text>
+
+  <line x1="652" y1="347" x2="698" y2="349" class="edge"/>
+  <text x="676" y="338" class="edge-label">是</text>
+  <line x1="512" y1="392" x2="512" y2="438" class="edge"/>
+  <text x="526" y="420" class="edge-label">否</text>
+
+  <line x1="652" y1="485" x2="698" y2="487" class="edge"/>
+  <text x="676" y="476" class="edge-label">是</text>
+  <line x1="512" y1="530" x2="512" y2="576" class="edge"/>
+  <text x="526" y="558" class="edge-label">否</text>
+
+  <line x1="652" y1="623" x2="698" y2="625" class="edge"/>
+  <text x="676" y="614" class="edge-label">是</text>
+
+  <!-- 判断4 否 → 可见 -->
+  <line x1="372" y1="623" x2="350" y2="616" class="edge"/>
+  <text x="361" y="606" class="edge-label">否</text>
+
+  <!-- 不可见3 → 回溯（绕行右侧，避免穿过不可见4） -->
+  <path d="M 795 507 L 920 507 L 920 660 L 512 660" class="edge"/>
+  <!-- 不可见4 → 回溯 -->
+  <path d="M 795 645 L 795 660 L 512 660" class="edge"/>
+  <!-- 汇入回溯节点 -->
+  <line x1="512" y1="660" x2="512" y2="704" class="edge"/>
+
+  <!-- 回溯循环箭头 -->
+  <path d="M 362 728 L 120 728 L 120 101 L 360 101" fill="none" stroke="#d32f2f" stroke-width="1.8" stroke-dasharray="6,4" marker-end="url(#arrowhead)"/>
+  <text x="112" y="420" class="edge-label" fill="#d32f2f" transform="rotate(-90 112 420)">循环：继续查找历史版本</text>
+
+  <!-- 底部图例 -->
+  <rect x="970" y="80" width="252" height="90" rx="12" fill="#FFFFFF" stroke="#E0E4E8" stroke-width="1"/>
+  <text x="990" y="108" class="start-text" fill="#1A1A2E" font-size="14px" text-anchor="start" dominant-baseline="auto">判断规则</text>
+  <text x="990" y="134" class="legend-text">依次执行 ①→②→③→④，</text>
+  <text x="990" y="156" class="legend-text">任一步命中即返回结果；</text>
+
+  <!-- 读视图字段说明 -->
+  <rect x="970" y="182" width="252" height="146" rx="12" fill="#FFFFFF" stroke="#E0E4E8" stroke-width="1"/>
+  <text x="990" y="210" class="start-text" fill="#1A1A2E" font-size="14px" text-anchor="start" dominant-baseline="auto">读视图字段</text>
+  <text x="990" y="238" class="legend-text">creator_trx_id：创建读视图的事务 ID</text>
+  <text x="990" y="262" class="legend-text">min_trx_id：活跃列表中最小事务 ID</text>
+  <text x="990" y="286" class="legend-text">max_trx_id：下一个待分配事务 ID</text>
+  <text x="990" y="310" class="legend-text">m_ids：生成读视图时的活跃事务列表</text>
+</svg>

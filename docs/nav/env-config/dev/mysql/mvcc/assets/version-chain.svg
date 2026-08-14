@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 640" width="1060" height="640">
+  <defs>
+    <style>
+      .title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 26px; font-weight: bold; fill: #1A1A2E; text-anchor: middle; }
+      .box-title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 16px; font-weight: bold; }
+      .box-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; fill: #444; }
+      .field { font-family: 'Courier New', Consolas, monospace; font-size: 13px; }
+      .field-label { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; fill: #666; }
+      .note-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; fill: #666; }
+    </style>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrowGray" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#8a94a6"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00b894"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1060" height="640" fill="#F5F7FA"/>
+
+  <text x="530" y="46" class="title">InnoDB 版本链：隐藏字段 + Undo Log</text>
+
+  <!-- ============ 数据行（最新版本） ============ -->
+  <rect x="80" y="96" width="440" height="212" rx="12" fill="#FFFFFF" stroke="#388e3c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="80" y="96" width="440" height="46" rx="12" fill="#E8F5E9"/>
+  <rect x="80" y="120" width="440" height="22" fill="#E8F5E9"/>
+  <text x="300" y="126" class="box-title" fill="#1b5e20" text-anchor="middle">数据行（最新版本）</text>
+
+  <!-- 显式字段 -->
+  <rect x="104" y="158" width="124" height="50" rx="6" fill="#F8FAFD" stroke="#E0E4E8"/>
+  <text x="166" y="180" class="field-label" text-anchor="middle">主键 id</text>
+  <text x="166" y="200" class="field" fill="#1A1A2E" text-anchor="middle">1</text>
+
+  <rect x="242" y="158" width="254" height="50" rx="6" fill="#F8FAFD" stroke="#E0E4E8"/>
+  <text x="369" y="180" class="field-label" text-anchor="middle">业务字段 name</text>
+  <text x="369" y="200" class="field" fill="#1A1A2E" text-anchor="middle">'Tom'（最新值）</text>
+
+  <!-- 隐藏字段 -->
+  <rect x="104" y="220" width="124" height="50" rx="6" fill="#FFF8E1" stroke="#fbc02d" stroke-width="1.5"/>
+  <text x="166" y="242" class="field-label" text-anchor="middle">DB_TRX_ID</text>
+  <text x="166" y="262" class="field" fill="#e65100" text-anchor="middle">60</text>
+
+  <rect x="242" y="220" width="254" height="50" rx="6" fill="#FFF8E1" stroke="#fbc02d" stroke-width="1.5"/>
+  <text x="369" y="242" class="field-label" text-anchor="middle">DB_ROLL_PTR</text>
+  <text x="369" y="262" class="field" fill="#e65100" text-anchor="middle">→ 指向 Undo Log</text>
+
+  <text x="300" y="298" class="note-text" text-anchor="middle">隐藏字段：每行数据都有的基础结构，用于事务、回滚与 MVCC</text>
+
+  <!-- ============ Undo Log 版本链 ============ -->
+  <rect x="576" y="96" width="404" height="332" rx="12" fill="#FFFFFF" stroke="#90a4ae" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="576" y="96" width="404" height="46" rx="12" fill="#ECEFF1"/>
+  <rect x="576" y="120" width="404" height="22" fill="#ECEFF1"/>
+  <text x="778" y="126" class="box-title" fill="#374151" text-anchor="middle">Undo Log（历史版本，按修改顺序串联）</text>
+
+  <!-- 版本3 -->
+  <rect x="600" y="158" width="356" height="60" rx="8" fill="#F1F8E9" stroke="#aed581" stroke-width="1.5"/>
+  <text x="618" y="182" class="box-text" fill="#33691e" font-weight="bold">版本 3</text>
+  <text x="618" y="206" class="field" fill="#33691e">trx_id=50，name='Bob'</text>
+  <text x="942" y="202" class="field-label" text-anchor="end">旧值</text>
+
+  <!-- 版本2 -->
+  <rect x="600" y="240" width="356" height="60" rx="8" fill="#F1F8E9" stroke="#aed581" stroke-width="1.5"/>
+  <text x="618" y="264" class="box-text" fill="#33691e" font-weight="bold">版本 2</text>
+  <text x="618" y="288" class="field" fill="#33691e">trx_id=40，name='Alice'</text>
+  <text x="942" y="284" class="field-label" text-anchor="end">旧值</text>
+
+  <!-- 版本1 -->
+  <rect x="600" y="322" width="356" height="60" rx="8" fill="#F1F8E9" stroke="#aed581" stroke-width="1.5"/>
+  <text x="618" y="346" class="box-text" fill="#33691e" font-weight="bold">版本 1（最旧）</text>
+  <text x="618" y="370" class="field" fill="#33691e">trx_id=30，name='Jerry'</text>
+  <text x="942" y="366" class="field-label" text-anchor="end">旧值</text>
+
+  <!-- 版本链箭头（从新到旧） -->
+  <line x1="778" y1="218" x2="778" y2="238" stroke="#8a94a6" stroke-width="2" marker-end="url(#arrowGray)"/>
+  <line x1="778" y1="300" x2="778" y2="320" stroke="#8a94a6" stroke-width="2" marker-end="url(#arrowGray)"/>
+
+  <!-- 数据行 DB_ROLL_PTR 指向最新 Undo 版本 -->
+  <path d="M 520 262 L 596 188" fill="none" stroke="#00b894" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+  <text x="498" y="214" class="field-label" fill="#00897b" font-weight="bold">DB_ROLL_PTR</text>
+
+  <!-- 底部说明 -->
+  <rect x="80" y="468" width="900" height="128" rx="12" fill="#FFFFFF" stroke="#E0E4E8" stroke-width="1" filter="url(#shadow)"/>
+  <text x="112" y="504" class="box-title" fill="#1A1A2E">版本链的作用</text>
+  <text x="112" y="534" class="box-text">1. 每次 UPDATE / DELETE 前，InnoDB 将旧版本写入 Undo Log，并用 DB_ROLL_PTR 串联成版本链。</text>
+  <text x="112" y="560" class="box-text">2. 快照读：根据读视图沿版本链从新到旧查找第一个可见版本。</text>
+  <text x="112" y="586" class="box-text">3. 事务回滚：沿版本链逐级恢复旧值（反向执行修改）。</text>
+</svg>

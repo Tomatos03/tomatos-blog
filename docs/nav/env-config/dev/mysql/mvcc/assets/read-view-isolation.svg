@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 560" width="1024" height="560">
+  <defs>
+    <style>
+      .title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 26px; font-weight: bold; fill: #1A1A2E; text-anchor: middle; }
+      .lane-label { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 15px; font-weight: bold; }
+      .event-label { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; fill: #333; }
+      .rv-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; font-weight: bold; }
+      .note-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; fill: #666; }
+    </style>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1024" height="560" fill="#F5F7FA"/>
+
+  <text x="512" y="48" class="title">不同隔离级别下读视图（Read View）的生成时机</text>
+
+  <!-- 顶部时间轴 -->
+  <line x1="120" y1="150" x2="920" y2="150" stroke="#546e7a" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <text x="936" y="154" class="event-label" fill="#546e7a">时间</text>
+
+  <!-- 事件标记 -->
+  <!-- t0: 事务A开始 -->
+  <circle cx="200" cy="150" r="6" fill="#1976d2"/>
+  <text x="200" y="128" class="event-label" fill="#0d47a1" text-anchor="middle" font-weight="bold">事务 A 开始</text>
+  <line x1="200" y1="156" x2="200" y2="210" stroke="#1976d2" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- t1: 第一次快照读 -->
+  <circle cx="420" cy="150" r="6" fill="#1976d2"/>
+  <text x="420" y="128" class="event-label" fill="#0d47a1" text-anchor="middle" font-weight="bold">第一次快照读</text>
+  <line x1="420" y1="156" x2="420" y2="226" stroke="#1976d2" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- t2: 事务B提交 -->
+  <circle cx="640" cy="150" r="6" fill="#e65100"/>
+  <text x="640" y="128" class="event-label" fill="#e65100" text-anchor="middle" font-weight="bold">事务 B 提交修改</text>
+
+  <!-- t3: 第二次快照读 -->
+  <circle cx="840" cy="150" r="6" fill="#1976d2"/>
+  <text x="840" y="128" class="event-label" fill="#0d47a1" text-anchor="middle" font-weight="bold">第二次快照读</text>
+  <line x1="840" y1="156" x2="840" y2="226" stroke="#1976d2" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- ============ 读已提交 lane ============ -->
+  <rect x="120" y="220" width="800" height="60" rx="10" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1" filter="url(#shadow)"/>
+  <text x="104" y="258" class="lane-label" fill="#0d47a1" text-anchor="end">读已提交</text>
+
+  <!-- RC 读视图1（第一次读时生成） -->
+  <rect x="380" y="230" width="80" height="40" rx="8" fill="#E3F2FD" stroke="#1976d2" stroke-width="2"/>
+  <text x="420" y="254" class="rv-text" fill="#0d47a1" text-anchor="middle">读视图①</text>
+  <text x="420" y="296" class="note-text" text-anchor="middle">每次快照读都生成新读视图</text>
+
+  <!-- RC 读视图2（第二次读时生成） -->
+  <rect x="800" y="230" width="80" height="40" rx="8" fill="#E3F2FD" stroke="#1976d2" stroke-width="2"/>
+  <text x="840" y="254" class="rv-text" fill="#0d47a1" text-anchor="middle">读视图②</text>
+
+  <!-- ============ 可重复读 lane ============ -->
+  <rect x="120" y="340" width="800" height="60" rx="10" fill="#FFFFFF" stroke="#D0D5DD" stroke-width="1" filter="url(#shadow)"/>
+  <text x="104" y="378" class="lane-label" fill="#2e7d32" text-anchor="end">可重复读</text>
+
+  <!-- RR 读视图（第一次快照读时生成，全程复用） -->
+  <rect x="400" y="350" width="470" height="40" rx="8" fill="#E8F5E9" stroke="#388e3c" stroke-width="2"/>
+  <text x="635" y="374" class="rv-text" fill="#1b5e20" text-anchor="middle">读视图（第一次快照读时生成，整个事务复用同一个）</text>
+
+  <!-- 结果对比 -->
+  <rect x="120" y="440" width="384" height="80" rx="10" fill="#FFF3E0" stroke="#f57c00" stroke-width="1.5"/>
+  <text x="312" y="470" class="lane-label" fill="#e65100" text-anchor="middle">读已提交</text>
+  <text x="312" y="496" class="note-text" text-anchor="middle">第二次读取能看到 B 的修改</text>
+  <text x="312" y="514" class="note-text" text-anchor="middle">→ 可能出现不可重复读</text>
+
+  <rect x="520" y="440" width="400" height="80" rx="10" fill="#E8F5E9" stroke="#388e3c" stroke-width="1.5"/>
+  <text x="720" y="470" class="lane-label" fill="#1b5e20" text-anchor="middle">可重复读</text>
+  <text x="720" y="496" class="note-text" text-anchor="middle">第二次读取仍看不到 B 的修改</text>
+  <text x="720" y="514" class="note-text" text-anchor="middle">→ 避免不可重复读（仍可能有幻读）</text>
+
+  <!-- 事务B提交竖线（最后绘制，跨越两个车道显示在最上层） -->
+  <line x1="640" y1="156" x2="640" y2="430" stroke="#e65100" stroke-width="1.5" stroke-dasharray="4,3"/>
+</svg>

@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 520" width="1024" height="520">
+  <defs>
+    <style>
+      .title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 26px; font-weight: bold; fill: #1A1A2E; text-anchor: middle; }
+      .panel-title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 20px; font-weight: bold; }
+      .panel-sub { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; fill: #555; }
+      .item-title { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 15px; font-weight: bold; }
+      .item-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 13px; fill: #444; }
+      .sql-text { font-family: 'Courier New', Consolas, monospace; font-size: 13px; }
+      .badge { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; font-weight: bold; }
+      .note-text { font-family: 'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif; font-size: 12px; fill: #666; }
+    </style>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1976d2"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#e65100"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1024" height="520" fill="#F5F7FA"/>
+
+  <text x="512" y="48" class="title">快照读（Snapshot Read） vs 当前读（Current Read）</text>
+
+  <!-- ============ 左面板：快照读 ============ -->
+  <rect x="48" y="80" width="448" height="400" rx="12" fill="#FFFFFF" stroke="#1976d2" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="48" y="80" width="448" height="56" rx="12" fill="#E3F2FD"/>
+  <rect x="48" y="112" width="448" height="24" fill="#E3F2FD"/>
+  <text x="272" y="112" class="panel-title" fill="#0d47a1" text-anchor="middle">快照读（不加锁）</text>
+
+  <!-- 特性列表 -->
+  <g transform="translate(70, 165)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#F8FAFD" stroke="#E3F2FD"/>
+    <text x="16" y="22" class="item-title" fill="#1976d2">读取内容</text>
+    <text x="16" y="42" class="item-text">读取数据的历史版本（快照），可能是旧数据</text>
+  </g>
+  <g transform="translate(70, 230)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#F8FAFD" stroke="#E3F2FD"/>
+    <text x="16" y="22" class="item-title" fill="#1976d2">是否加锁</text>
+    <text x="16" y="42" class="item-text">不加锁（无锁读取），不会阻塞其他事务</text>
+  </g>
+  <g transform="translate(70, 295)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#F8FAFD" stroke="#E3F2FD"/>
+    <text x="16" y="22" class="item-title" fill="#1976d2">阻塞行为</text>
+    <text x="16" y="42" class="item-text">不被其他事务的写操作阻塞，读写可并发</text>
+  </g>
+  <g transform="translate(70, 360)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#EDF7EE" stroke="#C8E6C9"/>
+    <text x="16" y="22" class="item-title" fill="#2e7d32">典型 SQL</text>
+    <text x="16" y="42" class="sql-text" fill="#1b5e20">SELECT * FROM table WHERE ...</text>
+  </g>
+  <text x="272" y="460" class="note-text" text-anchor="middle">通过 Undo Log 版本链 + 读视图（Read View）判断可见版本</text>
+
+  <!-- ============ 右面板：当前读 ============ -->
+  <rect x="528" y="80" width="448" height="400" rx="12" fill="#FFFFFF" stroke="#f57c00" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="528" y="80" width="448" height="56" rx="12" fill="#FFF3E0"/>
+  <rect x="528" y="112" width="448" height="24" fill="#FFF3E0"/>
+  <text x="752" y="112" class="panel-title" fill="#e65100" text-anchor="middle">当前读（加锁）</text>
+
+  <g transform="translate(550, 165)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#FFFBF5" stroke="#FFF3E0"/>
+    <text x="16" y="22" class="item-title" fill="#e65100">读取内容</text>
+    <text x="16" y="42" class="item-text">读取数据的最新版本（已提交的最新数据）</text>
+  </g>
+  <g transform="translate(550, 230)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#FFFBF5" stroke="#FFF3E0"/>
+    <text x="16" y="22" class="item-title" fill="#e65100">是否加锁</text>
+    <text x="16" y="42" class="item-text">加锁（共享锁 / 排他锁），防止其他事务修改</text>
+  </g>
+  <g transform="translate(550, 295)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#FFFBF5" stroke="#FFF3E0"/>
+    <text x="16" y="22" class="item-title" fill="#e65100">阻塞行为</text>
+    <text x="16" y="42" class="item-text">可能被其他事务的写操作阻塞（锁等待）</text>
+  </g>
+  <g transform="translate(550, 360)">
+    <rect x="0" y="0" width="404" height="52" rx="8" fill="#FFF8E1" stroke="#FFE082"/>
+    <text x="16" y="22" class="item-title" fill="#e65100">典型 SQL</text>
+    <text x="16" y="42" class="sql-text" fill="#bf360c">SELECT ... FOR UPDATE / UPDATE / DELETE</text>
+  </g>
+  <text x="752" y="460" class="note-text" text-anchor="middle">读取最新版本并加锁，保证数据最新且不被并发修改</text>
+
+  <!-- 底部示意：两种读操作在版本链上的差异 -->
+  <rect x="150" y="488" width="724" height="1" fill="#D0D5DD"/>
+  <text x="512" y="508" class="panel-sub" text-anchor="middle">快照读沿版本链回溯到可见的历史版本；当前读锁定并读取最新版本</text>
+</svg>
