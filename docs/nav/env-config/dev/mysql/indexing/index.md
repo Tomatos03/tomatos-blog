@@ -306,18 +306,24 @@ FROM users;
 CREATE INDEX idx_name_prefix ON users (name(10));
 ```
 
-## 单列索引&组合索引
+## 单列索引
 
-当表中某一个字段同时创建了单列索引和组合索引时，MySQL 在执行查询时会使用单列索引
+**单列索引**就是在表的一个列上建立的索引
 
 ```sql
 -- 创建单列索引
 CREATE INDEX idx_name ON users (name);
--- 创建组合索引
-CREATE INDEX idx_name_age ON users (name, age);
 
 -- 查询时会优先使用单列索引
 SELECT * FROM users WHERE name = '张三' and age = 25;
+```
+## 联合索引
+
+**联合索引**是指在数据库表的多个列上同时建立的索引:
+
+```sql
+-- 创建组合索引
+CREATE INDEX idx_name_age ON users (name, age);
 
 -- 如果需要使用组合索引, 可以通过强制使用索引来实现
 SELECT * FROM users FORCE INDEX (idx_name_age) WHERE name = '张三' and age = 25;
