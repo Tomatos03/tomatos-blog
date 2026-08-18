@@ -555,6 +555,7 @@ export default defineConfig({
                         { text: 'SQL操作', link: '/nav/env-config/dev/mysql/sql-operate/' },
                         { text: '事务', link: '/nav/env-config/dev/mysql/transaction/' },
                         { text: 'MVCC', link: '/nav/env-config/dev/mysql/mvcc/' },
+                        { text: '锁', link: '/nav/env-config/dev/mysql/lock/' },
                         { text: '索引', link: '/nav/env-config/dev/mysql/indexing/' },
                         { text: '日志', link: '/nav/env-config/dev/mysql/log/' },
                         { text: '信息查询', link: '/nav/env-config/dev/mysql/info-query/' },

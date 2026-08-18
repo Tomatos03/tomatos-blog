@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 260" font-family="sans-serif" font-size="14">
+  <rect x="0" y="0" width="820" height="260" fill="#ffffff"/>
+  <text x="410" y="26" text-anchor="middle" font-size="16" font-weight="bold" fill="#22303f">数据 1, 2, 3, 5, 8, 9, 10 上的临键锁区间</text>
+
+  <text x="128" y="58" text-anchor="middle" fill="#9aa7b8">(1, 2)</text>
+  <text x="183" y="58" text-anchor="middle" fill="#9aa7b8">(2, 3)</text>
+  <text x="265" y="58" text-anchor="middle" fill="#5b7aa8">(3, 5)</text>
+  <text x="403" y="58" text-anchor="middle" fill="#5b7aa8">(5, 8)</text>
+  <text x="513" y="58" text-anchor="middle" fill="#5b7aa8">(8, 9)</text>
+  <text x="568" y="58" text-anchor="middle" fill="#9aa7b8">(9, 10)</text>
+
+  <line x1="80" y1="90" x2="740" y2="90" stroke="#33415c" stroke-width="2"/>
+  <line x1="100" y1="82" x2="100" y2="98" stroke="#33415c" stroke-width="2"/>
+  <line x1="155" y1="82" x2="155" y2="98" stroke="#33415c" stroke-width="2"/>
+  <line x1="210" y1="82" x2="210" y2="98" stroke="#33415c" stroke-width="2"/>
+  <line x1="320" y1="82" x2="320" y2="98" stroke="#c07a3a" stroke-width="2.5"/>
+  <line x1="485" y1="82" x2="485" y2="98" stroke="#c07a3a" stroke-width="2.5"/>
+  <line x1="540" y1="82" x2="540" y2="98" stroke="#c07a3a" stroke-width="2.5"/>
+  <line x1="595" y1="82" x2="595" y2="98" stroke="#33415c" stroke-width="2"/>
+
+  <text x="100" y="120" text-anchor="middle" fill="#22303f">1</text>
+  <text x="155" y="120" text-anchor="middle" fill="#22303f">2</text>
+  <text x="210" y="120" text-anchor="middle" fill="#22303f">3</text>
+  <text x="320" y="120" text-anchor="middle" font-weight="bold" fill="#22303f">5</text>
+  <text x="485" y="120" text-anchor="middle" font-weight="bold" fill="#22303f">8</text>
+  <text x="540" y="120" text-anchor="middle" font-weight="bold" fill="#22303f">9</text>
+  <text x="595" y="120" text-anchor="middle" fill="#22303f">10</text>
+
+  <rect x="210" y="140" width="110" height="44" fill="#dbe8f6" stroke="#5b7aa8" stroke-width="1.5"/>
+  <rect x="320" y="140" width="165" height="44" fill="#dbe8f6" stroke="#5b7aa8" stroke-width="1.5"/>
+  <rect x="485" y="140" width="55" height="44" fill="#dbe8f6" stroke="#5b7aa8" stroke-width="1.5"/>
+
+  <text x="265" y="166" text-anchor="middle" font-weight="bold" fill="#22303f">(3, 5]</text>
+  <text x="403" y="166" text-anchor="middle" font-weight="bold" fill="#22303f">(5, 8]</text>
+  <text x="513" y="166" text-anchor="middle" font-weight="bold" fill="#22303f">(8, 9]</text>
+
+  <text x="410" y="222" text-anchor="middle" fill="#44546a">每一条扫描到的记录都加临键锁 = 记录 + 前面的完整间隙</text>
+  <text x="410" y="244" text-anchor="middle" fill="#44546a">查询 BETWEEN 5 AND 8 FOR UPDATE（加粗记录 5、8、9 被加锁）</text>
+</svg>
