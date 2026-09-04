@@ -105,15 +105,6 @@ export default defineConfig({
                 text: '编程组件',
                 items: [
                     {
-                        text: '数据库',
-                        items: [
-                            {
-                                text: 'MySQL',
-                                link: '/nav/env-config/dev/mysql/basics/',
-                            },
-                        ],
-                    },
-                    {
                         text: '容器化平台',
                         items: [
                             {
@@ -134,13 +125,25 @@ export default defineConfig({
                 ],
             },
             {
+                text: '数据基础设施',
+                items: [
+                    {
+                        text: 'MySQL',
+                        link: '/nav/data-infrastructure/mysql/basics/',
+                    },
+                    {
+                        text: '缓存',
+                        link: '/nav/data-infrastructure/cache/',
+                    },
+                ],
+            },
+            {
                 text: '编程基础',
                 items: [
                     { text: '协议', link: '/nav/fundamentals/protocol/http/http-protocol/' },
                     { text: '算法', link: '/nav/fundamentals/algorithm/' },
                     { text: '技术名词', link: '/nav/fundamentals/terminology/' },
                     { text: '伪代码', link: '/nav/fundamentals/pseudocode/' },
-                    { text: '缓存', link: '/nav/fundamentals/cache/' },
                     { text: '数学', link: '/nav/fundamentals/math/matrix/' },
                 ],
             },
@@ -571,34 +574,34 @@ export default defineConfig({
                     ],
                 },
             ],
-            '/nav/env-config/dev/mysql/': [
+            '/nav/data-infrastructure/mysql/': [
                 {
                     text: 'MySQL',
                     collapsed: false,
                     items: [
-                        { text: '概述', link: '/nav/env-config/dev/mysql/basics/' },
-                        { text: 'SQL操作', link: '/nav/env-config/dev/mysql/sql-operate/' },
-                        { text: '事务', link: '/nav/env-config/dev/mysql/transaction/' },
-                        { text: 'MVCC', link: '/nav/env-config/dev/mysql/mvcc/' },
-                        { text: '锁', link: '/nav/env-config/dev/mysql/lock/' },
-                        { text: '索引', link: '/nav/env-config/dev/mysql/indexing/' },
+                        { text: '概述', link: '/nav/data-infrastructure/mysql/basics/' },
+                        { text: 'SQL操作', link: '/nav/data-infrastructure/mysql/sql-operate/' },
+                        { text: '事务', link: '/nav/data-infrastructure/mysql/transaction/' },
+                        { text: 'MVCC', link: '/nav/data-infrastructure/mysql/mvcc/' },
+                        { text: '锁', link: '/nav/data-infrastructure/mysql/lock/' },
+                        { text: '索引', link: '/nav/data-infrastructure/mysql/indexing/' },
                         {
                             text: '日志',
-                            link: '/nav/env-config/dev/mysql/log/',
+                            link: '/nav/data-infrastructure/mysql/log/',
                             collapsed: true,
                             items: [
                                 {
                                     text: 'Redo Log',
-                                    link: '/nav/env-config/dev/mysql/log/redo-log/',
+                                    link: '/nav/data-infrastructure/mysql/log/redo-log/',
                                 },
                                 {
                                     text: 'Undo Log',
-                                    link: '/nav/env-config/dev/mysql/log/undo-log/',
+                                    link: '/nav/data-infrastructure/mysql/log/undo-log/',
                                 },
                             ],
                         },
-                        { text: '信息查询', link: '/nav/env-config/dev/mysql/info-query/' },
-                        { text: 'SQL优化', link: '/nav/env-config/dev/mysql/sql-refine/' },
+                        { text: '信息查询', link: '/nav/data-infrastructure/mysql/info-query/' },
+                        { text: 'SQL优化', link: '/nav/data-infrastructure/mysql/sql-refine/' },
                     ],
                 },
             ],
