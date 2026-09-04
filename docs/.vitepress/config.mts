@@ -497,7 +497,32 @@ export default defineConfig({
                     collapsed: false,
                     items: [
                         { text: '多线程', link: '/nav/languages/java/multithreading/' },
-                        { text: 'JUC', link: '/nav/languages/java/juc/' },
+                        {
+                            text: 'JUC',
+                            link: '/nav/languages/java/juc/',
+                            collapsed: true,
+                            items: [
+                                {
+                                    text: '线程池',
+                                    link: '/nav/languages/java/juc/thread-pool/',
+                                },
+                                { text: '锁', link: '/nav/languages/java/juc/lock/' },
+                                { text: '原子类', link: '/nav/languages/java/juc/atomic/' },
+                                {
+                                    text: '并发集合',
+                                    link: '/nav/languages/java/juc/collections/',
+                                },
+                                {
+                                    text: '同步器',
+                                    link: '/nav/languages/java/juc/synchronizer/',
+                                },
+                                { text: '异步任务', link: '/nav/languages/java/juc/async/' },
+                                {
+                                    text: 'ThreadLocal',
+                                    link: '/nav/languages/java/juc/thread-local/',
+                                },
+                            ],
+                        },
                         {
                             text: '内存结构',
                             link: '/nav/languages/java/memoery-struct/',
@@ -557,7 +582,21 @@ export default defineConfig({
                         { text: 'MVCC', link: '/nav/env-config/dev/mysql/mvcc/' },
                         { text: '锁', link: '/nav/env-config/dev/mysql/lock/' },
                         { text: '索引', link: '/nav/env-config/dev/mysql/indexing/' },
-                        { text: '日志', link: '/nav/env-config/dev/mysql/log/' },
+                        {
+                            text: '日志',
+                            link: '/nav/env-config/dev/mysql/log/',
+                            collapsed: true,
+                            items: [
+                                {
+                                    text: 'Redo Log',
+                                    link: '/nav/env-config/dev/mysql/log/redo-log/',
+                                },
+                                {
+                                    text: 'Undo Log',
+                                    link: '/nav/env-config/dev/mysql/log/undo-log/',
+                                },
+                            ],
+                        },
                         { text: '信息查询', link: '/nav/env-config/dev/mysql/info-query/' },
                         { text: 'SQL优化', link: '/nav/env-config/dev/mysql/sql-refine/' },
                     ],

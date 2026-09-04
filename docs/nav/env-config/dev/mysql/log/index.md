@@ -1,5 +1,17 @@
 # 日志
 
+MySQL 的日志大致分为两类：一类是 **server 层日志**，如错误日志、慢查询日志、二进制日志等；另一类是 **InnoDB 存储引擎日志**，如 redo log、undo log。本章先介绍 server 层的日志类型与慢查询配置，InnoDB 的事务日志则以单独章节深入讲解。
+
+## 深入阅读
+
+| 主题 | 说明 |
+| --- | --- |
+| [Redo Log](./redo-log/) | InnoDB 事务日志：WAL 预写策略、记录内容与崩溃恢复 |
+| [Undo Log](./undo-log/) | InnoDB 事务日志：记录修改前旧值，支持回滚与 MVCC 快照读 |
+
+> [!NOTE]
+> Undo Log 用于事务回滚与 MVCC 快照读，详细介绍见 [Undo Log](./undo-log/) 章节，其在 MVCC 中的作用见 [MVCC](../mvcc/) 章节。
+
 ## 日志类型
 
 MySQL 主要有以下几种日志类型：
@@ -10,8 +22,6 @@ MySQL 主要有以下几种日志类型：
 | 查询日志（General Query Log） | 记录所有客户端连接和执行的 SQL 语句 | 调试和审计 |
 | 慢查询日志（Slow Query Log） | 记录执行时间超过指定阈值的 SQL 语句 | 识别性能瓶颈 |
 | 二进制日志（Binary Log）| 记录所有更改数据库数据的操作 | 用于数据恢复和主从复制。|
-
-
 
 ## 慢SQL日志配置
 
